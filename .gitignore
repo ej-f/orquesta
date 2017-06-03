@@ -1,0 +1,13 @@
+# Build files
+build
+*.py[cd]
+
+# Cython generated files
+__pycache__
+
+# Editor files
+*~
+.project
+.pydevproject
+.settings/*
+.*.swp

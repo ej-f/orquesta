@@ -1,0 +1,1 @@
+kitty.exe -convert-dir
