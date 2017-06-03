@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="toolbar">
+    <file>img/reset.png</file>
+    <file>img/directory.png</file>
+    <file>img/remote.png</file>
+    <file>img/var.png</file>
+    <file>img/terminal.png</file>
+    <file>img/new.png</file>
+    <file>img/config.png</file>
+    <file>img/exit.png</file>
+    <file>img/save.png</file>
+  </qresource>
+</RCC>

@@ -1,0 +1,24 @@
+[DEFAULT]
+port = 22
+protocol = ssh
+
+[node_foobar]
+ip = 127.0.0.1
+
+[node_foo]
+ip = 127.0.0.1
+
+[node_bar]
+ip = 127.0.0.1
+
+[node_baz]
+ip = 127.0.0.1
+
+[node_qux]
+ip = 127.0.0.1
+
+
+
+
+
+

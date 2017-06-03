@@ -1,0 +1,12 @@
+
+Orquesta is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3.0 of the License, or any later version.
+
+Orquesta is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details.
+
+Orquesta Widgets are based on PyQt, which is distributed under 
+a choice of licences: GPL version 2, GPL version 3, or a commercial license.
