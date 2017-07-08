@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os, sys
-from PyQt4.QtCore import (QProcess, QObject, QThread, SIGNAL)
+from PyQt4.QtCore import QProcess, QObject, QThread, SIGNAL
 from PyQt4.QtGui import QApplication
 from utils import utils, autowin
 
@@ -10,7 +11,7 @@ class Kitty(QObject):
     """manage kitty process (terminals)"""
     exe_name = 'kitty'
     DELAY = 150
-    def __init__(self, ip, port, protocol, name, log_path, window_title, log_name,  parent = None):
+    def __init__(self, ip, port, protocol, name, log_path, window_title, log_name, parent = None):
         QObject.__init__(self, parent)
         self.ip = ip
         self.port = port
@@ -84,7 +85,7 @@ class KittysManager(QObject):
                                                             self.elements.dic[element]['port'], 
                                                             self.elements.dic[element]['protocol'],
                                                             element, log_path, windows_title, log_name)
-    def send(self, text, next_line = True):
+    def send(self, text, move_next = True):
         """ send a string to all selected terminals"""
         actives = self.elements.get_actives()
         any_closed = self.verify_selected()
@@ -93,10 +94,10 @@ class KittysManager(QObject):
         else:
             for element in actives:
                 if type(text) == utils.Var:
-                    self.elements.dic[element]['process'].send(text.stringOfElement(element))
+                    self.elements.dic[element]['process'].send(text.stringOfElement(element).strip())
                 else:
                     self.elements.dic[element]['process'].send(text.strip())
-            if next_line:
+            if move_next:
                 self.emit(SIGNAL('move_next'))
         Kitty.show_main()
 
@@ -147,7 +148,7 @@ class KittysManager(QObject):
     
 class Commands(QObject):
     """contain the logic that map strings (commands) into function calls """
-    def __init__(self, kittysmanager, mylistwidget, init_var = {}, parent=None):
+    def __init__(self, kittysmanager, mylistwidget, init_var = {}, parent = None):
         QObject.__init__(self, parent)
         self.mylistwidget = mylistwidget
         self.kittysmanager = kittysmanager
@@ -155,25 +156,26 @@ class Commands(QObject):
         self.command = None
         self.move_next = False
         self.mainsel_elements = None
-        self.commanddict = {'mainsel' : self.mainsel , 
+        self.commanddict = {'mainsel' : self.mainsel, 
                             'sel' : self.sel, 
                             'open' : self.open, 
-                            'send' : self.send, 
+                            'send' : self.send,
                             'view' : self.view, 
                             '#' : self.comment, 
-                            'set' : self.set, 
+                            'set' : self.set,
                             'inv' : self.inv, 
                             'gsend' : self.sendg, 
                             'close' : self.close}
     
-    def call(self, text, move_next = True, decrement = 2, line = None):
+    def call(self, line, move_next = True, decrement = 2):
         self.move_next = move_next
         error = False
         try:
-            if self.valid_command(text):
-                self.commanddict[self.command](text[len(self.command):])
+            self.valid_command(line)
+            if self.command:
+                self.commanddict[self.command](line[len(self.command):])
             else:
-                self.send(text)
+                self.send(line)
         except ValueError:
             error = True
         if not error and self.command != '#':
@@ -185,12 +187,12 @@ class Commands(QObject):
     
     def send(self, arg):
         arg = self.line_substitution(arg)
-        self.kittysmanager.send(arg, next_line = self.move_next)
+        self.kittysmanager.send(arg, move_next = self.move_next)
     
     def sendg(self, arg):
-        arg = self.line_substitution(arg).strip()
+        arg = self.line_substitution(arg)
         var = utils.Var('var', self.kittysmanager.terminals_group, arg)
-        self.kittysmanager.send(var, next_line = self.move_next)
+        self.kittysmanager.send(var, move_next = self.move_next)
     
     def close(self, arg):
         elements_to_close = self.kittysmanager.elements_to_close()
@@ -211,7 +213,7 @@ class Commands(QObject):
             raise ValueError('the instruction set require two parameters')
         else:
             key = args[0]
-            value =  ' '.join(args[1:])
+            value =  arg[len(key)+1:].strip()
             self.var[key] = value
             self.verify_nextline()
 
@@ -249,18 +251,17 @@ class Commands(QObject):
         
     @staticmethod        
     def parse_line(line):
-        return line.split()
+        return line.strip().split()
         
     def line_substitution(self, arg):
         return utils.safe_dict_substitution(arg, self.var)
             
     def valid_command(self, line):
-        for command in self.commanddict:
-            if line.startswith(command):
-                self.command = command
-                return True
-        self.command = None
-        return False
+        self.command = set([line.strip().split(' ')[0]]) & set(self.commanddict.keys())
+        if self.command:
+            self.command = list(self.command)[0]
+        else:
+            self.command = None
     
     def verify_nextline(self):
         if self.move_next:

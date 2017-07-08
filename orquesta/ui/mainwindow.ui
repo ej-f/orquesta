@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>542</width>
-    <height>546</height>
+    <width>606</width>
+    <height>584</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,64 +22,109 @@
     <height>800</height>
    </size>
   </property>
+  <property name="baseSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Orquesta</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="margin">
+     <number>4</number>
+    </property>
     <item>
      <widget class="QSplitter" name="splitter_2">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="maximumSize">
-       <size>
-        <width>1204</width>
-        <height>604</height>
-       </size>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
       <widget class="QSplitter" name="splitter">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+       <property name="sizeIncrement">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="midLineWidth">
+        <number>0</number>
        </property>
        <property name="orientation">
         <enum>Qt::Vertical</enum>
+       </property>
+       <property name="handleWidth">
+        <number>1</number>
        </property>
        <widget class="QGroupBox" name="groupbox_terminals">
         <property name="enabled">
          <bool>true</bool>
         </property>
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>120</width>
-          <height>235</height>
+          <width>100</width>
+          <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>200</width>
-          <height>300</height>
+          <width>120</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="title">
          <string>Terminals</string>
         </property>
-	<layout class="QVBoxLayout" name="verticalLayout">
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>4</number>
+         </property>
          <item>
           <widget class="OrListWidget" name="listwidget"/>
          </item>
@@ -87,29 +132,44 @@
        </widget>
        <widget class="QGroupBox" name="groupbox_cwd">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>120</width>
-          <height>200</height>
+          <width>100</width>
+          <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>200</width>
-          <height>300</height>
+          <width>120</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="sizeIncrement">
+         <size>
+          <width>0</width>
+          <height>0</height>
          </size>
         </property>
         <property name="title">
-         <string>Working directory</string>
+         <string>Logs path</string>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>4</number>
+         </property>
          <item>
-          <widget class="OrTreeView" name="treeview"/>
+          <widget class="OrLogsListView" name="logslistview"/>
          </item>
         </layout>
        </widget>
@@ -121,18 +181,6 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="minimumSize">
-        <size>
-         <width>400</width>
-         <height>450</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>1000</width>
-         <height>1000</height>
-        </size>
-       </property>
       </widget>
      </widget>
     </item>
@@ -143,7 +191,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>542</width>
+     <width>606</width>
      <height>18</height>
     </rect>
    </property>
@@ -166,7 +214,7 @@
    </widget>
    <widget class="QMenu" name="menu_operation">
     <property name="title">
-     <string>Operations</string>
+     <string>&amp;Operations</string>
     </property>
     <addaction name="action_open_terminals"/>
     <addaction name="action_send_move_next"/>
@@ -174,22 +222,20 @@
     <addaction name="action_close_terminals"/>
     <addaction name="separator"/>
     <addaction name="action_edit_var_file"/>
+    <addaction name="action_edit_config"/>
+    <addaction name="action_open_local_dir"/>
+    <addaction name="action_open_local_term"/>
    </widget>
    <widget class="QMenu" name="menu_help">
     <property name="title">
-     <string>Help</string>
+     <string>&amp;Help</string>
     </property>
     <addaction name="action_about"/>
    </widget>
-   <widget class="QMenu" name="menu_select">
+   <widget class="QMenu" name="menu_selection">
     <property name="title">
-     <string>S&amp;elect</string>
+     <string>&amp;Selection</string>
     </property>
-    <widget class="QMenu" name="menu_unselect">
-     <property name="title">
-      <string>Unselect</string>
-     </property>
-    </widget>
     <addaction name="action_select_all"/>
     <addaction name="action_unselect_all"/>
     <addaction name="action_invert"/>
@@ -202,7 +248,7 @@
     <addaction name="separator"/>
    </widget>
    <addaction name="menu_project"/>
-   <addaction name="menu_select"/>
+   <addaction name="menu_selection"/>
    <addaction name="menu_operation"/>
    <addaction name="menu_templates"/>
    <addaction name="menu_help"/>
@@ -245,7 +291,10 @@
      <normaloff>:/toolbar/img/save.png</normaloff>:/toolbar/img/save.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Save script</string>
+    <string>Save script</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="action_exit">
@@ -254,23 +303,32 @@
      <normaloff>:/toolbar/img/exit.png</normaloff>:/toolbar/img/exit.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Exit</string>
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
    </property>
   </action>
   <action name="action_select_all">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>All</string>
+    <string>&amp;Select all terminals</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+S</string>
+    <string>Ctrl+Shift+S</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::WindowShortcut</enum>
    </property>
   </action>
   <action name="action_unselect_all">
    <property name="text">
-    <string>None</string>
+    <string>&amp;Unselect all terminals</string>
    </property>
    <property name="shortcut">
-    <string>Alt+S</string>
+    <string>Ctrl+Shift+D</string>
    </property>
   </action>
   <action name="action_about">
@@ -284,7 +342,7 @@
      <normaloff>:/toolbar/img/remote.png</normaloff>:/toolbar/img/remote.png</iconset>
    </property>
    <property name="text">
-    <string>Open Terminals</string>
+    <string>&amp;Open selected terminals</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -292,7 +350,7 @@
   </action>
   <action name="action_send_move_next">
    <property name="text">
-    <string>Send and move next</string>
+    <string>Execute current line and move next</string>
    </property>
    <property name="shortcut">
     <string>F1</string>
@@ -300,7 +358,7 @@
   </action>
   <action name="action_send">
    <property name="text">
-    <string>Send</string>
+    <string>Execute current line</string>
    </property>
    <property name="shortcut">
     <string>F2</string>
@@ -309,7 +367,7 @@
   <action name="action_new">
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/toolbar/img/new.png</normaloff>:/toolbar/img/nuevo.png</iconset>
+     <normaloff>:/toolbar/img/new.png</normaloff>:/toolbar/img/new.png</iconset>
    </property>
    <property name="text">
     <string>New</string>
@@ -317,21 +375,27 @@
    <property name="toolTip">
     <string>New project</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="action_invert">
    <property name="text">
-    <string>Invert selection</string>
+    <string>&amp;Invert selection</string>
    </property>
    <property name="toolTip">
     <string>Invert selection</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+I</string>
+    <string>Ctrl+Shift+I</string>
    </property>
   </action>
   <action name="action_close_terminals">
    <property name="text">
-    <string>Close terminals</string>
+    <string>Close selected terminals</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+C</string>
    </property>
   </action>
   <action name="action_save_as_template">
@@ -354,10 +418,10 @@
      <normaloff>:/toolbar/img/config.png</normaloff>:/toolbar/img/config.png</iconset>
    </property>
    <property name="text">
-    <string>_edit_config</string>
+    <string>Edit config file</string>
    </property>
    <property name="toolTip">
-    <string>Modify config file</string>
+    <string>Edit config file</string>
    </property>
   </action>
   <action name="action_open_local_dir">
@@ -366,10 +430,13 @@
      <normaloff>:/toolbar/img/directory.png</normaloff>:/toolbar/img/directory.png</iconset>
    </property>
    <property name="text">
-    <string>_open_dir_in_cwd</string>
+    <string>Open file explorer in logs path</string>
    </property>
    <property name="toolTip">
-    <string>Open local directory</string>
+    <string>Open file explorer in logs path</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+F</string>
    </property>
   </action>
   <action name="action_open_local_term">
@@ -378,10 +445,13 @@
      <normaloff>:/toolbar/img/terminal.png</normaloff>:/toolbar/img/terminal.png</iconset>
    </property>
    <property name="text">
-    <string>_open_term_in_cwd</string>
+    <string>Open local terminal in current log path</string>
    </property>
    <property name="toolTip">
-    <string>Open local terminal in current directory</string>
+    <string>Open local terminal in current log path</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+T</string>
    </property>
   </action>
   <action name="action_restart">
@@ -414,15 +484,15 @@
    <header>widgets.orlistwidget</header>
   </customwidget>
   <customwidget>
-   <class>OrTreeView</class>
-   <extends>QTreeView</extends>
-   <header>widgets.ortreeview</header>
+   <class>OrLogsListView</class>
+   <extends>QListView</extends>
+   <header>widgets.orlogslistview</header>
   </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>listwidget</tabstop>
   <tabstop>sciscintilla</tabstop>
-  <tabstop>treeview</tabstop>
+  <tabstop>logslistview</tabstop>
  </tabstops>
  <resources>
   <include location="resources.qrc"/>

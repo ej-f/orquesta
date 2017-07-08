@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os, re
+import os
 import configparser
 from collections import OrderedDict
 
@@ -15,7 +16,6 @@ def set_log_name(file_name, path = './', ext = '.txt'):
         return fileaux + ext
     else:
         return file_name + ext
-
 
 class Var():
     extention = '.txt'
@@ -53,17 +53,21 @@ class Var():
             print('\'global\' must be included')
 
 def safe_dict_substitution(format_str, dic):
-    for e in dic:
-        if '$' + e  in format_str:
-            format_str = re.sub('\$' + e , dic[e], format_str)
+    """ 
+    perform substitution of bash-like variable names in format_str
+    >>> safe_dict_subtitution("hi $name", {"name": "joe"})
+    hi joe
+    """
+    for var in dic:
+        if '$' + var  in format_str:
+            format_str = format_str.replace('$' + var , dic[var])
     return format_str
-
 
 cfgdir = './cfg'
 
 class Elements():
-    def __init__(self, platform):
-        self.dic = self.conf2dict(platform)
+    def __init__(self, group_name):
+        self.dic = self.conf2dict(group_name)
     
     def conf2dict(self, group):
         """return a dictionary from a configuration file"""

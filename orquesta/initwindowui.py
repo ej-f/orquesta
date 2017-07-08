@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file './ui/initwindow.ui'
 #
-# Created: Tue May 23 17:20:07 2017
+# Created: Fri Jul  7 11:51:13 2017
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,11 +26,13 @@ except AttributeError:
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName(_fromUtf8("Dialog"))
-        Dialog.resize(360, 144)
+        Dialog.resize(342, 114)
         Dialog.setWindowTitle(_fromUtf8(""))
         self.verticalLayout = QtGui.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout.setSizeConstraint(QtGui.QLayout.SetDefaultConstraint)
+        self.horizontalLayout.setMargin(0)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.label_nombre = QtGui.QLabel(Dialog)
         self.label_nombre.setObjectName(_fromUtf8("label_nombre"))
@@ -61,6 +63,7 @@ class Ui_Dialog(object):
         self.horizontalLayout_2.addWidget(self.button_log_path)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.buttonBox = QtGui.QDialogButtonBox(Dialog)
+        self.buttonBox.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedStates))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
@@ -75,5 +78,5 @@ class Ui_Dialog(object):
         self.label_nombre.setText(_translate("Dialog", "Project name:", None))
         self.label_group.setText(_translate("Dialog", "Terminals group:", None))
         self.label.setText(_translate("Dialog", "Logs path: ", None))
-        self.button_log_path.setText(_translate("Dialog", "Select", None))
+        self.button_log_path.setText(_translate("Dialog", "&Select", None))
 

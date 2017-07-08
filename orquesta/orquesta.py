@@ -1,22 +1,26 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys, os, re
-from PyQt4.QtCore import (SIGNAL, QUrl)
+from PyQt4.QtCore import SIGNAL, QUrl
 from PyQt4.QtGui import (QDialog, QApplication, QMainWindow, QFileDialog,
-                          QDesktopWidget, QMessageBox, QDesktopServices, QAction)
+                         QDesktopWidget, QMessageBox, QDesktopServices, QAction)
 import initwindowui, mainwindowui
 import terminals
 from utils import utils
 import functools as ft
-
+import subprocess
+__version__ = '0.1.1'
 
 class InitWindow(QDialog, initwindowui.Ui_Dialog):
     cfg_path = 'cfg'
     default_log_path = os.path.join(os.getcwd(), 'logs')
+    WIDTH = 320
+    HEIGHT = 100
     def __init__(self, parent = None):
         QDialog.__init__(self, parent)
         self.setupUi(self)
-        self.setWindowTitle('New project')
-        self.setFixedSize(320, 100)
+        self.setWindowTitle('Orquesta - new project')
+        self.setFixedSize(self.WIDTH, self.HEIGHT)
         self.mainwindow = None
         self.project_name = ''
         self.lineedit_log_path.setText(self.default_log_path)
@@ -31,7 +35,7 @@ class InitWindow(QDialog, initwindowui.Ui_Dialog):
 
     def accept(self):
         # ensuring a valid path name 
-        self.project_name = re.sub(r'[^a-zA-Z0-9\-\(\) \t\r\n\v\f]+', '_', self.lineedit_project_name.text())
+        self.project_name = re.sub(r'[^\w]+', '_', self.lineedit_project_name.text())
         self.close()
         self.mainwindow = MainWindow(self.project_name, self.combobox_term_group.currentText(), logs_dir = self.lineedit_log_path.text())
         self.mainwindow.show()
@@ -40,21 +44,21 @@ class InitWindow(QDialog, initwindowui.Ui_Dialog):
 class MainWindow(QMainWindow, mainwindowui.Ui_MainWindow):    
     default_log_dir = 'default'
     var_path = os.path.join(os.getcwd(), 'var')
-    def __init__(self, project_name, terminal_group = 'test', logs_dir = 'logs' , parent = None):    
+    def __init__(self, project_name, terminal_group = 'test', logs_dir = 'logs', parent = None):    
         QMainWindow.__init__(self, parent)
         self.setupUi(self)
         self.script_name = '{}script.txt'.format(terminal_group)
         self.logs_dir = logs_dir
         self.teminal_group = terminal_group
         self.template_dir = os.path.join('templates', self.teminal_group)
-        self.load_geometry()
+        self.set_window_position()
         self.cfg_path = os.path.abspath(os.path.join('cfg', self.teminal_group + '.cfg' ))
         self.elements = utils.Elements(terminal_group)
         self.setup_listwidget()
         self.project_name = project_name
         self.init_window = None
         self.setcwd()
-        self.setWindowTitle(self.windowTitle() + ' ( {} - {} )'.format(self.project_name, terminal_group))
+        self.setWindowTitle(self.windowTitle() + ' - {} - {}    {}'.format( terminal_group, self.project_name, self.wdir))
         self.kittysmanager = terminals.KittysManager(terminal_group, self.wdir, self.elements)
         self.commands = terminals.Commands(self.kittysmanager, self.listwidget)
         self.connect_custom_signals()
@@ -62,7 +66,7 @@ class MainWindow(QMainWindow, mainwindowui.Ui_MainWindow):
         self.add_templates()
         os.makedirs(self.logs_dir, exist_ok = True)
         os.makedirs(self.wdir, exist_ok = True)
-        self.treeview.setup(root_dir = os.path.normpath(self.logs_dir), wdir = os.path.normpath(self.wdir))
+        self.logslistview.setup(wdir = os.path.normpath(self.wdir))
         self.connect_actions()
         self.script_file_path = os.path.join(self.wdir, self.script_name)
         self.load_script()
@@ -112,13 +116,14 @@ class MainWindow(QMainWindow, mainwindowui.Ui_MainWindow):
     def slot_set_modify_line(self, prefix, line, index):
         setline = self.sciscintilla.text(line)
         if setline.startswith(prefix) and len(setline.split()) >= 3:
-            self.commands.call(setline, move_next = False, line = line )
+            self.commands.call(setline, move_next = False)
   
-    def load_geometry(self):
+    def set_window_position(self):
         """ align window on screen """
         resolution = QDesktopWidget().screenGeometry()
-        self.move((resolution.width()*0.97) - (self.frameSize().width()),
-            (resolution.height() / 2) - (self.frameSize().height() / 2))
+        xpos = resolution.width()*0.97 - self.frameSize().width()
+        ypos = resolution.height()/2 - self.frameSize().height()/2
+        self.move(xpos, ypos)
   
     def verify_set_lines(self):
         """ read all the lines in the editor (OrSciScintilla) to verify if contain set commands """
@@ -152,15 +157,22 @@ class MainWindow(QMainWindow, mainwindowui.Ui_MainWindow):
         if os.path.isfile(path):
             QDesktopServices.openUrl(QUrl('file:///' + path))
         else:
-            QMessageBox.warning(self, 'File doesn\'t exist','Var file not found for {}'.format(self.teminal_group))
+            QMessageBox.warning(self, 'File doesn\'t exist', 'Var file not found for {}'.format(self.teminal_group))
     
     def open_local_term(self):
-        """open windows cmd in cwd"""
-        command = 'start cmd /K "cd ' + self.wdir + '"'
-        os.system(command)     
-    
+        """ open local terminal in log's path """
+        # open git-bash if is installed
+        local_terms = ['git-bash --cd="{}"'.format(self.wdir), 
+                       'start cmd /K "cd {}"'.format(self.wdir)]
+        for term in local_terms:
+            try:
+                subprocess.Popen(term, close_fds = True, creationflags = 8)
+                break
+            except FileNotFoundError:
+                continue
+
     def open_local_dir(self):
-        """open file explorer in cwd"""
+        """ open file explorer in log's path """
         command = 'explorer /e,"' + self.wdir + '"'
         os.system(command)
 
@@ -181,7 +193,7 @@ class MainWindow(QMainWindow, mainwindowui.Ui_MainWindow):
         self.commands.call('close')        
  
     def process_line(self, move_next = True, decrement = 2):
-        line = self.sciscintilla.get_current_line().strip()
+        line = self.sciscintilla.get_current_line()
         self.commands.call(line, move_next, decrement)
      
     def close_all_terminals(self):
@@ -200,14 +212,17 @@ class MainWindow(QMainWindow, mainwindowui.Ui_MainWindow):
                 event.ignore()
                  
     def close_terminals(self, msg):
+        """ close selected terminals"""
         reply = QMessageBox.question(self, 'Open terminals', msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.Yes:
             self.kittysmanager.close()
 
     def set_traking_mark(self, decrement = 2):
+        """ add mark in the last executed line """
         self.sciscintilla.set_tracking_mark(self.sciscintilla.getLineNumber() - decrement)
  
     def save_file(self, directory, caption):
+        """ save script as template """
         filename = QFileDialog.getSaveFileName(self, caption = caption, directory = directory, filter = '*.txt')
         if filename:
             s = open(filename, 'w', newline = '\n')
@@ -215,7 +230,7 @@ class MainWindow(QMainWindow, mainwindowui.Ui_MainWindow):
             s.close()
              
     def add_templates(self):
-        """add templates to the menu"""
+        """ add templates to the menu """
         template_path_list = []
         if os.path.exists(self.template_dir):
             list_dir = os.listdir(self.template_dir)
@@ -234,9 +249,9 @@ class MainWindow(QMainWindow, mainwindowui.Ui_MainWindow):
             os.makedirs(self.template_dir, exist_ok = True)
          
     def insert_template(self, template_path):
-        """ insert selected template into the editor"""
+        """ insert selected template into the editor """
         if template_path and os.path.isfile(template_path):
-            template_name  = os.path.basename(template_path)
+            template_name = os.path.basename(template_path)
             template_file = open(template_path, newline = '\n')
             file_text = template_file.read()
             template_file.close()
@@ -250,11 +265,10 @@ class MainWindow(QMainWindow, mainwindowui.Ui_MainWindow):
                           """<p>author: Edgar Fuentes (<a href=\"mailto:fuentesej@gmail.com\">fuentesej@gmail.com</a>)</p>
                           <p>license: GPL 3.0</p>
                           <p>github: <a href=\"https://github.com/ej-f/orquesta\">https://github.com/ej-f/orquesta</a></p>
-                          <p>version: 0.1.0</p>
-                          """
+                          <p>version: {version}</p>
+                          """.format(version = __version__)
                           )
          
-     
     def warning(self, st):
         QMessageBox.warning(self, 'Warning', st + '\nline: {}'.format(self.sciscintilla.getLineNumber()))
 
@@ -264,7 +278,6 @@ def main():
     initwindow = InitWindow()
     initwindow.show()
     app.exec_()
-    
 
 if __name__ == '__main__':
     main()

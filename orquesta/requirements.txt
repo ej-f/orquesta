@@ -1,0 +1,3 @@
+PyQt4>=4.11.3
+pypiwin32>=219
+cx_Freeze>=4.3.4

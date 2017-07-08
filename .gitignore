@@ -1,7 +1,7 @@
 # Build files
 build
 *.py[cd]
-
+logs
 # Cython generated files
 __pycache__
 

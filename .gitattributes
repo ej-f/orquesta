@@ -10,3 +10,6 @@
 # Denote all files that are truly binary and should not be modified.
 *.png binary
 *.exe binary
+
+# Keep windows line ending for this file
+Default%20Settings eol=crlf
